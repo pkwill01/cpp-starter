@@ -14,6 +14,7 @@ make
 ./helloWorld
 ```
 ### Tests
+On make command tests will automatically all be run 
 
 ## Adding Modules
 First create new folder in `src/[moduleName]` then add the `moduleName.h` and `moduleName.cpp` files. Then open the `CMakeLists.txt` file and add;
@@ -31,10 +32,13 @@ include_directories(${DIR_MODULENAME}) #<----add me
 file(GLOB SRC_LIB CONFIGURE_DEPENDS ${DIR_MODULENAME}/*.cpp ${DIR_MODULENAME}/*.h) #<----add me
 add_library(moduleName_lib STATIC ${SRC_LIB}) #<----add me
 
-# Link Modules 
+# Link Modules for main
 target_link_libraries(${TARGET_BIN} moduleName_lib) #<----add me
+
+# Link Modules for test  
+target_link_libraries(${TEST_BIN} moduleName_lib ${CPPUTEST_LDFLAGS}) #<----add me
 ```
 Your new module should now be added and ready to be called from main!
 ## TODO 
 
-- [] Add CPPU test and test folder to cmake 
+- [x] Add CPPU test and test folder to cmake 

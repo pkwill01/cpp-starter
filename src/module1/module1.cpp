@@ -3,5 +3,5 @@
 
 void goodbyeWorld()
 {
-        std::cout << "GoocBye World" << std::endl;
+        std::cout << "GoodBye World" << std::endl;
 }

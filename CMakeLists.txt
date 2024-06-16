@@ -29,7 +29,7 @@ message(STATUS "Found CppUTest version ${CPPUTEST_VERSION}")
 # Target names
 set(TARGET_LIB common)
 set(TARGET_BIN ${PROJECT_NAME})
-set(TEST_BIN ${PROJECT_NAME}_test)
+set(TEST_BIN run_test)
 
 # Source files 
 set(DIR_SRC src)
@@ -70,12 +70,17 @@ if(SRC_LIB)
     target_link_libraries(${TARGET_BIN} ${TARGET_LIB})
 endif()
 
-# Link Modules 
+# Link Modules for main
 target_link_libraries(${TARGET_BIN} module1_lib)
+
 
 # Testing Setup 
 add_executable(${TEST_BIN} ${SRC_TEST})
 target_link_libraries(${TEST_BIN} ${CPPUTEST_LDFLAGS})
+
+# Link Modules for test  
+target_link_libraries(${TEST_BIN} module1_lib ${CPPUTEST_LDFLAGS})
+
 
 # Custom command to run tests
 add_custom_command(TARGET ${TEST_BIN} POST_BUILD
