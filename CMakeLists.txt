@@ -21,31 +21,27 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 add_definitions(-DEIGEN_INITIALIZE_MATRICES_BY_NAN)
 
-# Workaround for Qt5 being unlinked under MacOS
-if(APPLE AND (NOT DEFINED ENV{Qt5_DIR} OR ENV{Qt5_DIR} STREQUAL "Qt5_DIR-NOTFOUND"))
-    execute_process(COMMAND brew --prefix qt@5 OUTPUT_VARIABLE PREFIX_QT5 OUTPUT_STRIP_TRAILING_WHITESPACE)
-    set(ENV{Qt5_DIR} ${PREFIX_QT5}/lib/cmake/Qt5)
-endif()
 
-# find_package(OpenCV 4.5 REQUIRED)
 
 # Target names
 set(TARGET_LIB common)
 set(TARGET_BIN ${PROJECT_NAME})
-# set(TARGET_TEST tests)
 
-# Libraries
-# set(LIBS
-#     ${OpenCV_LIBS}
-# )
 
 # Source files
 set(DIR_SRC src)
+set(DIR_MODULE1 ${DIR_SRC}/module1)
 # set(DIR_TEST_SRC test/src)
 
+# Include directories
+include_directories(${DIR_MODULE1})
 
 # Application
 file(GLOB SRC_BIN CONFIGURE_DEPENDS ${DIR_SRC}/*.cpp ${DIR_SRC}/*.h ${DIR_SRC}/*.hpp)
+
+# Static library (module1)
+file(GLOB SRC_LIB CONFIGURE_DEPENDS ${DIR_MODULE1}/*.cpp ${DIR_MODULE1}/*.h)
+add_library(module1_lib STATIC ${SRC_LIB})
 
 # Static library
 set(SRC_LIB ${SRC_BIN})
@@ -67,17 +63,18 @@ add_executable(${TARGET_BIN} src/main.cpp)
 if(SRC_LIB)
     target_link_libraries(${TARGET_BIN} ${TARGET_LIB})
 endif()
+target_link_libraries(${TARGET_BIN} module1_lib)
 target_link_libraries(${TARGET_BIN} ${LIBS})
 
 
 
 # Run unit tests after building executables
-add_custom_target(run_tests ALL
-    COMMAND ${TARGET_TEST} --no-intro --force-colors=true
-    DEPENDS ${TARGET_TEST}
-    DEPENDS ${TARGET_BIN}
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "Running tests"
-)
+# add_custom_target(run_tests ALL
+#     COMMAND ${TARGET_TEST} --no-intro --force-colors=true
+#     DEPENDS ${TARGET_TEST}
+#     DEPENDS ${TARGET_BIN}
+#     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+#     COMMENT "Running tests"
+# )
 
 set_property(GLOBAL PROPERTY TARGET_MESSAGES OFF)
