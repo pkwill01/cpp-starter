@@ -29,6 +29,7 @@ set(TARGET_BIN ${PROJECT_NAME})
 
 
 # Source files
+
 set(DIR_SRC src)
 set(DIR_MODULE1 ${DIR_SRC}/module1)
 # set(DIR_TEST_SRC test/src)
@@ -63,6 +64,8 @@ add_executable(${TARGET_BIN} src/main.cpp)
 if(SRC_LIB)
     target_link_libraries(${TARGET_BIN} ${TARGET_LIB})
 endif()
+
+# Link Modules 
 target_link_libraries(${TARGET_BIN} module1_lib)
 target_link_libraries(${TARGET_BIN} ${LIBS})
 
